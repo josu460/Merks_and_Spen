@@ -23,7 +23,8 @@ class Articulo:
         titulo.pack()
 
         # Carga de imagen
-        imagen_articulo = Image.open("C:\\Users\\josuu\\OneDrive\\Documentos\\POO\\Merks_and_Spen\\imagenes\\articulo.jpeg")
+        imagen_articulo = Image.open("C:\\Users\\josuu\\OneDrive\\Documentos\\POO\\Merks_and_Spen\\CRUDMerksandSpen\\imagenes\\online-shopping-mexico-800-3423d44e0.png")
+
 
         nueva_img = imagen_articulo.resize((60,60))
         render = ImageTk.PhotoImage(nueva_img)
