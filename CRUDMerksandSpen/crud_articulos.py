@@ -73,7 +73,7 @@ class Articulo:
         Button(frame_botones, text="Generar Ticket", height=2, width=15, bg="blue", fg="white", font=("Comic Sans", 10, "bold"), command=self.generar_ticket).grid(row=0, column=3, padx=5, pady=8)
 
         # Tabla para ver los artículos
-        self.tree = ttk.Treeview(height=13, columns=("columna1", "columna2", "columna3", "columna4", "columna5"))
+        self.tree = ttk.Treeview(ventana_articulo, height=13, columns=("columna1", "columna2", "columna3", "columna4", "columna5"))
         self.tree.heading("#0", text="Codigo", anchor=CENTER)
         self.tree.column("#0", width=90, minwidth=75, stretch=NO)
 
@@ -196,7 +196,3 @@ class Articulo:
         for i, articulo in enumerate(self.articulos):
             self.tree.insert("", END, text=str(i), values=(articulo["nombre"], articulo["categoria"], articulo["cantidad"], articulo["precio"], articulo["descripcion"]))
 
-if __name__ == "__main__":
-    ventana_principal = Tk()
-    aplicacion = Articulo(ventana_principal)
-    ventana_principal.mainloop()
