@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter import ttk 
 from tkinter import messagebox
+from tkinter import filedialog
 
 # Python Image Library
 from PIL import Image, ImageTk
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import os
 
 class Articulo:
     def __init__(self, ventana_articulo):
@@ -41,8 +45,8 @@ class Articulo:
         self.nombre = Entry(marco, width=25)
         self.nombre.grid(row=1, column=1, padx=5, pady=8)
 
-        Label(marco, text="Categoria:", font=("Comic Sans", 10, "bold")).grid(row=2, column=0, sticky='e', padx=5, pady=8)
-        self.combo_categoria = ttk.Combobox(marco, values=["Categoria 1", "Categoria 2", "Categoria 3"], width=22)
+        Label(marco, text="Departamento:", font=("Comic Sans", 10, "bold")).grid(row=2, column=0, sticky='e', padx=5, pady=8)
+        self.combo_categoria = ttk.Combobox(marco, values=["Almacen", "Recursos Humanos", "Departamento 3"], width=22)
         self.combo_categoria.current(0)
         self.combo_categoria.grid(row=2, column=1, padx=5, pady=8)
 
@@ -65,6 +69,7 @@ class Articulo:
         Button(frame_botones, text="Agregar", height=2, width=10, bg="green", fg="white", font=("Comic Sans", 10, "bold"), command=self.agregar_articulo).grid(row=0, column=0, padx=5, pady=8)
         Button(frame_botones, text="Editar", height=2, width=10, bg="gray", fg="white", font=("Comic Sans", 10, "bold"), command=self.editar_articulo).grid(row=0, column=1, padx=5, pady=8)
         Button(frame_botones, text="Eliminar", height=2, width=10, bg="red", fg="white", font=("Comic Sans", 10, "bold"), command=self.eliminar_articulo).grid(row=0, column=2, padx=5, pady=8)
+        Button(frame_botones, text="Generar Ticket", height=2, width=15, bg="blue", fg="white", font=("Comic Sans", 10, "bold"), command=self.generar_ticket).grid(row=0, column=3, padx=5, pady=8)
 
         # Tabla para ver los artículos
         self.tree = ttk.Treeview(height=13, columns=("columna1", "columna2", "columna3", "columna4", "columna5"))
@@ -115,7 +120,7 @@ class Articulo:
         nombre_edit.insert(END, articulo["values"][0])  # Nombre del artículo
         nombre_edit.grid(row=0, column=1, padx=5, pady=5)
 
-        Label(ventana_editar, text="Categoria:", font=("Comic Sans", 10, "bold")).grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        Label(ventana_editar, text="Departamento:", font=("Comic Sans", 10, "bold")).grid(row=1, column=0, sticky="e", padx=5, pady=5)
         categoria_edit = Entry(ventana_editar)
         categoria_edit.insert(END, articulo["values"][1])  # Categoria del artículo
         categoria_edit.grid(row=1, column=1, padx=5, pady=5)
@@ -134,7 +139,6 @@ class Articulo:
         descripcion_edit = Text(ventana_editar, width=40, height=10)
         descripcion_edit.insert(END, articulo["values"][4])  # Descripcion del artículo
         descripcion_edit.grid(row=4, column=1, padx=5, pady=5)
-
 
         def guardar_cambios():
             self.tree.item(item_id, values=(nombre_edit.get(), categoria_edit.get(), cantidad_edit.get(), precio_edit.get(), descripcion_edit.get("1.0", END)))
@@ -159,6 +163,32 @@ class Articulo:
             messagebox.showerror('ERROR', f'Error al eliminar el artículo: {nombre}')
 
 
+    def generar_ticket(self):
+        seleccion = self.tree.selection()
+        if not seleccion:
+            messagebox.showerror("Error", "Por favor selecciona al menos un artículo para generar el ticket.")
+            return
+
+        # Crear el documento PDF
+        c = canvas.Canvas("ticket.pdf", pagesize=letter)
+        
+        # Escribir el contenido del ticket
+        c.drawString(100, 750, "Ticket de Compra")
+        c.drawString(100, 730, "--------------------------")
+        y = 700
+        for i, item_id in enumerate(seleccion):
+            articulo = self.tree.item(item_id)['values']
+            c.drawString(100, y, f"Artículo {i + 1}: {articulo[0]} - ${articulo[3]}")
+            y -= 20
+        
+        # Guardar el PDF y cerrar el documento
+        c.save()
+        messagebox.showinfo("Ticket generado", "Se ha generado el ticket correctamente como 'ticket.pdf'")
+        self.abrir_pdf()
+
+    def abrir_pdf(self):
+        filepath = os.path.abspath("ticket.pdf")
+        os.system(f'start {filepath}')
 
     def actualizar_tabla(self):
         self.tree.delete(*self.tree.get_children())
