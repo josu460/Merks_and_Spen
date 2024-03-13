@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
 
-# Python Image Library
+# para poder mostrar imagenes en la interfaz
 from PIL import Image, ImageTk
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter

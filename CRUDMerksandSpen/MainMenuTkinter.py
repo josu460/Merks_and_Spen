@@ -38,8 +38,7 @@ class MainMenuTkinter:
 
     def abrir_login(self):
         login_root = tk.Toplevel(self.root)
-        app = LoginTkinter(login_root, self.crud) 
-        login_root.mainloop()
+        app = LoginTkinter(login_root, self.crud)
 
     def visualizar_departamentos(self):
         departamentos = self.crud.consultar_usuarios()

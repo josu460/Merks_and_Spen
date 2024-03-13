@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
-from crud import CRUD
+from crud_articulos import Articulo  # Importa la clase Articulo desde el archivo crud_articulos
 
 class LoginTkinter:
     def __init__(self, root, crud):
         self.root = root
+        self.crud = crud
+
         self.root.title("Login")
         self.root.geometry("300x150")
-
-        self.crud = crud
 
         self.label_nombre = tk.Label(root, text="Nombre del departamento:")
         self.label_nombre.pack()
@@ -26,17 +26,20 @@ class LoginTkinter:
         self.button_login.pack()
 
     def validar_login(self):
-        nombre = self.entry_nombre.get()
-        contraseña = self.entry_contraseña.get()
+        username = self.entry_nombre.get()
+        password = self.entry_contraseña.get()
 
-        stored_password = self.crud.obtener_contraseña(nombre)
-        if stored_password is not None and stored_password == contraseña:
-            messagebox.showinfo("Bienvenido", f"Bienvenido Administrador de: {nombre}")
+        if username == "admin" and password == "admin":
+            messagebox.showinfo("Bienvenido", f"Bienvenido Administrador de: {username}")
+            self.abrir_crud_articulos()  # Llama a la función para abrir el CRUD de artículos
         else:
             messagebox.showerror("Error", "Credenciales incorrectas")
 
+    def abrir_crud_articulos(self):
+        crud_root = tk.Toplevel(self.root)  # Crea una nueva ventana para el CRUD de artículos
+        app = Articulo(crud_root)  # Inicia la aplicación del CRUD de artículos
+
 if __name__ == "__main__":
     root = tk.Tk()
-    crud = CRUD()
-    app = LoginTkinter(root, crud)
+    app = LoginTkinter(root, None)
     root.mainloop()
