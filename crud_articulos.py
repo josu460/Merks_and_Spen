@@ -178,10 +178,10 @@ class Articulo:
         y = 700
         for i, item_id in enumerate(seleccion):
             articulo = self.tree.item(item_id)['values']
-            c.drawString(100, y, f"Artículo {i + 1}: {articulo[0]} - ${articulo[3]}")
+            c.drawString(100, y, f"Artículo {i + 1}: {articulo[0]} - ${articulo[3]} - Cantidad: {articulo[2]} - Categoria: {articulo[1]} ")
             y -= 20
         
-        # Guardar el PDF y cerrar el documento
+       
         c.save()
         messagebox.showinfo("Ticket generado", "Se ha generado el ticket correctamente como 'ticket.pdf'")
         self.abrir_pdf()
